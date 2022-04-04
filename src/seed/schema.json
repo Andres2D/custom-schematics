@@ -1,0 +1,32 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "$id": "SchematicsSeed",
+    "title": "Seed Schema",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "Your Name",
+            "x-prompt": "What is your name?"
+        },
+        "typegreeting": {
+            "type": "string",
+            "description": "Your greeting",
+            "enum": [
+                "feminine",
+                "masculine",
+                "genderless"
+            ],
+            "x-prompt": {
+                "message": "What is your type greeting?",
+                "type": "list",
+                "items": [
+                    { "value": "feminine", "label": "Feminine" },
+                    { "value": "masculine", "label": "Masculine" },
+                    { "value": "genderless", "label": "Genderless" }
+                ]
+            }
+        }
+    },
+    "required": ["name"]
+}
