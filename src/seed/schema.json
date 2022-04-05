@@ -9,6 +9,10 @@
             "description": "Your Name",
             "x-prompt": "What is your name?"
         },
+        "project": {
+            "type": "string",
+            "description": "Generate in specific Angular CLI workspace project"
+        },
         "typegreeting": {
             "type": "string",
             "description": "Your greeting",
