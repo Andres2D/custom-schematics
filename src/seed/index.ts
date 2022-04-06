@@ -4,10 +4,12 @@ import {
   Tree, 
   apply, 
   mergeWith, 
-  template, 
   url, 
   SchematicsException, 
-  move 
+  move, 
+  template,
+  chain,
+  MergeStrategy
 } from '@angular-devkit/schematics';
 import { strings } from '@angular-devkit/core';
 import { parseName } from '@schematics/angular/utility/parse-name';
@@ -39,9 +41,29 @@ export function seed(_options: any): Rule {
         ...strings,
         name
       }),
-      move(path)
+      move(path),
     ]);
 
-    return mergeWith(sourceParametrizedTemplates)(tree, _context);
+    const merge = mergeWith(sourceParametrizedTemplates, MergeStrategy.Overwrite) as Rule;
+
+    let rule = chain([
+      merge
+    ])
+
+    if(_options.storybooks) {
+      const sourceTemplatesSB = url('./storybook');
+      _context.logger.info('Generating storybooks 🎨');
+      const sourceStorybookTemplates = apply(sourceTemplatesSB, [
+          move('./'),
+      ]);
+      const mergeSB = mergeWith(sourceStorybookTemplates, MergeStrategy.Overwrite) as Rule; 
+
+      rule = chain([
+        merge,
+        mergeSB
+      ])
+    }
+
+    return rule(tree, _context) as Rule;
   };
 }

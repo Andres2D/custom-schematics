@@ -30,6 +30,11 @@
                     { "value": "genderless", "label": "Genderless" }
                 ]
             }
+        },
+        "storybooks": {
+            "type": "boolean",
+            "description": "Would you like to add storybooks?",
+            "x-prompt": "Would you like to add storybooks?"
         }
     },
     "required": ["name"]
