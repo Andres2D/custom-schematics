@@ -14,6 +14,7 @@ import {
 import { strings } from '@angular-devkit/core';
 import { parseName } from '@schematics/angular/utility/parse-name';
 import { buildDefaultPath } from '@schematics/angular/utility/project';
+import { updatePackageJsonSB } from '../storybooks/index';
 
 // You don't have to export the function as default. You can also have more than one rule factory
 // per file.
@@ -60,7 +61,8 @@ export function seed(_options: any): Rule {
 
       rule = chain([
         merge,
-        mergeSB
+        mergeSB,
+        updatePackageJsonSB()
       ])
     }
 

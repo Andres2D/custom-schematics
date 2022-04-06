@@ -1,22 +1,31 @@
-// import { Rule, Tree, SchematicContext, apply, url, move, mergeWith } from '@angular-devkit/schematics';
-// // import { execSync } from 'child_process';
-
-// export function storybooksEvaluation(option: boolean): Rule {
-//     // const sourceTemplatesStorybook = url('./storybook');
-
-//     return (tree: Tree, _context: SchematicContext): Tree => {
-//         const sourceTemplatesSB = url('./storybook');
-//         if(option) {
-//             _context.logger.info('Generating storybooks :art:');
-//             const sourceStorybookTemplates = apply(sourceTemplatesSB, [
-//                 move('./'),
-//             ]);
-
-//             const merge = mergeWith(sourceStorybookTemplates)(tree, _context) as Rule; 
-
-//             return merge;
-//             // execSync('npx sb init');
-//         }
-//         return tree;
-//     };
-// }
+import {
+    Rule,
+    Tree,
+    SchematicContext,
+    SchematicsException,
+  } from '@angular-devkit/schematics';
+  import { dependencies, scripts } from './constants/constants';
+  
+  export function updatePackageJsonSB(): Rule {
+    return (tree: Tree, _context: SchematicContext): Tree => {
+      const path = `/package.json`;
+      if (tree.exists(path)) {
+        const file = tree.read(path);
+        const json = JSON.parse(file!.toString());
+  
+        // Update scripts
+        json.scripts = {
+          ...json.scripts,
+          ...scripts
+        };
+  
+        // Add new dependencies
+        json.devDependencies = { ...json.devDependencies, ...dependencies };
+  
+        tree.overwrite(path, JSON.stringify(json, null, 2));
+        return tree;
+      }
+      throw new SchematicsException(`Does not exist ${path}.`);
+    };
+  }
+  
