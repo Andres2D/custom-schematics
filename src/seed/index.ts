@@ -8,13 +8,12 @@ import {
   SchematicsException, 
   move, 
   template,
-  chain,
   MergeStrategy
 } from '@angular-devkit/schematics';
 import { strings } from '@angular-devkit/core';
 import { parseName } from '@schematics/angular/utility/parse-name';
 import { buildDefaultPath } from '@schematics/angular/utility/project';
-import { updatePackageJsonSB } from '../storybooks/index';
+import { RunSchematicTask } from '@angular-devkit/schematics/tasks';
 
 // You don't have to export the function as default. You can also have more than one rule factory
 // per file.
@@ -45,27 +44,10 @@ export function seed(_options: any): Rule {
       move(path),
     ]);
 
-    const merge = mergeWith(sourceParametrizedTemplates, MergeStrategy.Overwrite) as Rule;
-
-    let rule = chain([
-      merge
-    ])
-
     if(_options.storybooks) {
-      const sourceTemplatesSB = url('./storybook');
-      _context.logger.info('Generating storybooks 🎨');
-      const sourceStorybookTemplates = apply(sourceTemplatesSB, [
-          move('./'),
-      ]);
-      const mergeSB = mergeWith(sourceStorybookTemplates, MergeStrategy.Overwrite) as Rule; 
-
-      rule = chain([
-        merge,
-        mergeSB,
-        updatePackageJsonSB()
-      ])
+      _context.addTask(new RunSchematicTask('storybook', { storybook: _options.story }));
     }
 
-    return rule(tree, _context) as Rule;
+    return mergeWith(sourceParametrizedTemplates, MergeStrategy.Overwrite) as Rule;
   };
 }

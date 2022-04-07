@@ -5,6 +5,11 @@
       "description": "A blank schematic.",
       "factory": "./seed/index#seed",
       "schema": "./seed/schema.json"
+    },
+    "storybook": {
+      "description": "Storybooks.",
+      "factory": "./storybook/index#storybook",
+      "schema": "./storybook/schema.json"
     }
   }
 }
